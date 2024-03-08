@@ -4,26 +4,26 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/ansh8898/Contact-Management-System.git'
+                script {
+                    // Set the path to the Git executable
+                    env.PATH = "${tool 'Git'}/bin:${env.PATH}"
+                    
+                    // Checkout code from Git repository
+                    checkout([$class: 'GitSCM', 
+                              branches: [[name: '*/main']],
+                              doGenerateSubmoduleConfigurations: false,
+                              extensions: [],
+                              userRemoteConfigs: [[url: 'https://github.com/ansh8898/Contact-Management-System']]])
+                }
             }
         }
+        // Add more stages as needed
+    }
 
-        stage('Build') {
-            steps {
-                sh 'mvn clean install'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                sh 'mvn deploy'
-            }
+    // Post-build actions
+    post {
+        always {
+            // Cleanup steps or notifications
         }
     }
 }
