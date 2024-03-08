@@ -1,47 +1,26 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs "NodeJS" // Assuming "NodeJS" tool is configured in Jenkins
-        git "Default"   // Assuming "Default" Git tool is configured in Jenkins
-    }
-
     stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: 'main']], userRemoteConfigs: [[url: 'https://github.com/ansh8898/Contact-Management-System.git']]])
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                script {
-                    bat 'npm install'
-                }
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                script {
-                    bat 'npm test -- --passWithNoTests'
-                }
+                // Checkout code from the GitHub repository
+                git branch: 'main', url: 'https://github.com/ansh8898/Contact-Management-System.git'
             }
         }
 
         stage('Build') {
             steps {
-                script {
-                    bat 'npm run build'
-                }
+                // Copy HTML files to a directory where they can be served
+                bat 'mkdir html'
+                bat 'xcopy /s /y .\\*.html .\\html\\'
             }
         }
 
         stage('Deploy') {
             steps {
-                script {
-                    bat 'npm run start -- -p 3000'
-                }
+                // Deploy HTML files using a simple HTTP server (adjust as per your deployment needs)
+                bat 'cd html && python -m http.server 8000'
             }
         }
     }
