@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/ansh8898/Contact-Management-System.git'
+            }
+        }
+
+        stage('Open Files in Browser') {
+            steps {
+                script {
+                    def files = sh(script: 'git ls-files', returnStdout: true).trim().split('\n')
+                    def baseUrl = "https://github.com/ansh8898/Contact-Management-System/blob/main/"
+
+                    files.each { file ->
+                        def url = baseUrl + file
+                        echo "Opening ${url}"
+                        bat "start ${url}" // Use 'start' command for Windows
+                    }
+                }
+            }
+        }
+    }
+}
