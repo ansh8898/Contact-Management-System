@@ -1,25 +1,33 @@
 pipeline {
     agent any
 
+    environment {
+        // Specify the path to the Git executable
+        GIT_PATH = "C:\\Program Files\\Git\\bin"
+    }
+
     stages {
         stage('Checkout') {
             steps {
+                // Set the PATH environment variable to include the Git installation directory
+                bat "SET PATH=%GIT_PATH%;%PATH%"
+                
                 // Checkout code from the GitHub repository
-                git branch: 'main', url: 'https://github.com/ansh8898/Contact-Management-System.git'
+                git branch: 'main', url:'https://github.com/ansh8898/Contact-Management-System'
             }
         }
 
         stage('Build') {
             steps {
                 // Assuming Maven is used for building
-                sh 'mvn clean package'
+                bat 'mvn clean package'
             }
         }
 
         stage('Test') {
             steps {
                 // Assuming Maven is used for testing
-                sh 'mvn test'
+                bat 'mvn test'
             }
         }
 
