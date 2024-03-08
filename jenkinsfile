@@ -4,33 +4,29 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout code from the GitHub repository
-                git branch: 'main', url: 'https://github.com/ansh8898/Contact-Management-System.git'
+                git 'https://github.com/ansh8898/https://github.com/ansh8898/Contact-Management-System.git'
             }
         }
 
         stage('Build') {
             steps {
-                // Copy HTML files to a directory where they can be served
-                bat 'mkdir html'
-                bat 'xcopy /s /y .\\*.html .\\html\\'
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
             }
         }
 
         stage('Deploy') {
-            steps {
-                // Deploy HTML files using a simple HTTP server (adjust as per your deployment needs)
-                bat 'cd html && python -m http.server 8000'
+            when {
+                branch 'master'
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Build and deployment successful!'
-        }
-        failure {
-            echo 'Build or deployment failed!'
+            steps {
+                sh 'mvn deploy'
+            }
         }
     }
 }
