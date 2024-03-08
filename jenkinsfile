@@ -4,20 +4,26 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                script {
-                    // Set the path to the Git executable
-                    env.PATH = "${tool 'Git'}/bin:${env.PATH}"
-                    
-                    // Checkout code from Git repository
-                    checkout([$class: 'GitSCM', 
-                              branches: [[name: '*/main']],
-                              doGenerateSubmoduleConfigurations: false,
-                              extensions: [],
-                              userRemoteConfigs: [[url: 'https://github.com/ansh8898/Contact-Management-System']]])
-                }
+                // Checkout code from the GitHub repository
+                git branch: 'main', url: 'https://github.com/ansh8898/Contact-Management-System.git'
             }
         }
-        // Add more stages as needed
+
+        stage('Build') {
+            steps {
+                // Assuming Maven is used for building
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Assuming Maven is used for testing
+                sh 'mvn test'
+            }
+        }
+
+        // Add more stages as needed, such as deployment or additional testing stages
     }
 
     // Post-build actions
