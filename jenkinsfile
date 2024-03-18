@@ -1,30 +1,26 @@
-pipeline {
-    agent any
-
-    stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/ansh8898/Contact-Management-System.git'
-            }
+stages {
+    stage('Checkout') {
+        steps {
+            git 'https://github.com/ansh8898/Contact-Management-System.git'
         }
+    }
 
-        stage('Build') {
-            steps {
-                sh 'mvn clean install'
-            }
+    stage('Build') {
+        steps {
+            sh 'mvn clean install'
         }
+    }
 
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
+    stage('Test') {
+        steps {
+            sh 'mvn test'
         }
+    }
 
-        stage('Deploy') {
-            steps {
-                echo 'Deploying to production server...'
-                // Add your deployment steps here
-            }
+    stage('Deploy') {
+        steps {
+            echo 'Deploying to production server...'
+            // Add your deployment steps here
         }
     }
 }
